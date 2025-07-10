@@ -1,8 +1,13 @@
-// src/screens/History.js
 import React, { useState, useEffect } from 'react';
 import {
-  View, Text, StyleSheet, FlatList, TouchableOpacity, TextInput,
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  TextInput,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const History = ({ navigation }) => {
   const [search, setSearch] = useState('');
@@ -54,17 +59,24 @@ const History = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Informes Semanales</Text>
-      <TextInput
-        style={styles.search}
-        placeholder="Buscar por pecera o semana..."
-        value={search}
-        onChangeText={setSearch}
-      />
+
+      <View style={styles.searchContainer}>
+        <Ionicons name="search" size={20} color="#555" style={styles.searchIcon} />
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Buscar por pecera o semana..."
+          value={search}
+          onChangeText={setSearch}
+          placeholderTextColor="#888"
+        />
+      </View>
+
       <FlatList
         data={filteredReports}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={{ paddingBottom: 20 }}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );
@@ -75,42 +87,59 @@ export default History;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F6FBFF',
     padding: 20,
     paddingTop: 40,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '700',
     color: '#003B73',
-    marginBottom: 30,
+    marginBottom: 25,
+    textAlign: 'center',
   },
-  search: {
-    backgroundColor: '#CAF0F8',
-    padding: 10,
-    borderRadius: 12,
+  searchContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#E8F1F8',
+    borderRadius: 15,
+    alignItems: 'center',
+    paddingHorizontal: 12,
+    paddingVertical: 10,
     marginBottom: 20,
+  },
+  searchIcon: {
+    marginRight: 8,
+  },
+  searchInput: {
+    flex: 1,
     fontSize: 16,
+    color: '#003B73',
   },
   card: {
-    backgroundColor: '#E0F7FA',
-    padding: 15,
+    backgroundColor: '#FFFFFF',
     borderRadius: 15,
+    padding: 16,
     marginBottom: 15,
-    elevation: 2,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
   },
   cardTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#0077B6',
+    marginBottom: 5,
   },
   week: {
-    fontSize: 14,
-    color: '#003B73',
+    fontSize: 15,
+    color: '#555',
+    marginBottom: 4,
   },
   summaryPreview: {
     fontSize: 14,
-    color: '#555',
-    marginTop: 5,
+    color: '#888',
+    marginTop: 2,
   },
 });

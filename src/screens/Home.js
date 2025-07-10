@@ -1,70 +1,46 @@
-// screens/Home.js
 import React from 'react';
-import { View, Text, Image, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import { useNavigation } from '@react-navigation/native';
 
 const Home = () => {
+  const navigation = useNavigation();
+
   return (
     <ScrollView style={styles.container}>
       <Animatable.View animation="fadeInDown" style={styles.header}>
         <Text style={styles.title}>Bienvenido a AquaSense</Text>
         <Text style={styles.description}>
-          AquaSense es un sistema inteligente de monitoreo de calidad del agua que registra en tiempo real los niveles de oxígeno disuelto, pH y temperatura.
+        AquaSense es un sistema inteligente de monitoreo de calidad del agua que registra en tiempo real los niveles de oxígeno disuelto, pH y temperatura.
         </Text>
       </Animatable.View>
 
-      <Animatable.View animation="fadeInUp" delay={300} style={styles.gallerySection}>
-        <Text style={styles.sectionTitle}>Galería</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <Image
-            source={{ uri: 'https://complementosparaaves.com/blog/wp-content/uploads/2024/10/Designer-4.jpeg' }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-          <Image
-            source={{ uri: 'https://pecesmarinos.es/wp-content/uploads/2023/04/peces-cirujano-naso-elegans.jpg' }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-          <Image
-            source={{ uri: 'https://www.zooplus.es/magazine/wp-content/uploads/2021/02/Goldfish.webp' }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-        </ScrollView>
+      <TouchableOpacity style={styles.loginButton} onPress={() => navigation.navigate('Login')}>
+        <Text style={styles.loginButtonText}>Iniciar Sesión</Text>
+      </TouchableOpacity>
 
-        {/* Segundo carrusel separado */}
-        <Text style={styles.sectionSubtitle}>Más vistas</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.secondCarousel}>
-          <Image
-            source={{ uri: 'https://complementosparaaves.com/blog/wp-content/uploads/2024/10/Designer-4.jpeg' }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-          <Image
-            source={{ uri: 'https://pecesmarinos.es/wp-content/uploads/2023/04/peces-cirujano-naso-elegans.jpg' }}
-            style={styles.image}
-            resizeMode="cover"
-          />
-          <Image
-            source={{ uri: 'https://www.zooplus.es/magazine/wp-content/uploads/2021/02/Goldfish.webp' }}
-            style={styles.image}
-            resizeMode="cover"
-          />
+      <Animatable.View animation="fadeInUp" delay={300} style={styles.gallerySection}>
+        <Text style={styles.sectionTitle}></Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          {[
+            'https://complementosparaaves.com/blog/wp-content/uploads/2024/10/Designer-4.jpeg',
+            'https://pecesmarinos.es/wp-content/uploads/2023/04/peces-cirujano-naso-elegans.jpg',
+            'https://www.zooplus.es/magazine/wp-content/uploads/2021/02/Goldfish.webp',
+          ].map((uri, index) => (
+            <View key={index} style={styles.imageCard}>
+              <Image source={{ uri }} style={styles.image} />
+            </View>
+          ))}
         </ScrollView>
       </Animatable.View>
 
       <Animatable.View animation="fadeInUp" delay={500} style={styles.teamSection}>
         <Text style={styles.sectionTitle}>Equipo de Trabajo</Text>
         <Text style={styles.teamText}>
-          - Mariela Vazquez González{"\n"}
-          Lider del equipo, Desarrollo Frontend, Desarrollo IoT{"\n"}
-          - Fernanda Rios Corrales{"\n"}
-          Desarrollo Frontend, Desarrollo IoT{"\n"}
-          - Norberto Hernández Ramírez{"\n"}
-          Desarrollo Backend, Desarrollo IoT {"\n"}
-          - Gregorio Rivas García{"\n"}
-          Desarrollo Backend, Desarrollo IoT {"\n"}
+          - Mariela Vázquez González{"\n"}Líder del equipo, Frontend, IoT{"\n\n"}
+          - Fernanda Ríos Corrales{"\n"}Frontend, IoT{"\n\n"}
+          - Norberto Hernández Ramírez{"\n"}Backend, IoT{"\n\n"}
+          - Gregorio Rivas García{"\n"}Backend, IoT
         </Text>
       </Animatable.View>
     </ScrollView>
@@ -79,60 +55,78 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   header: {
-    padding: 20,
+    padding: 30,
     backgroundColor: '#003B73',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
+    alignItems: 'center',
   },
   title: {
     color: '#FFFFFF',
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    marginTop: 60,
     marginBottom: 10,
+    textAlign: 'center',
   },
   description: {
-    color: '#E0E0E0',
+    color: '#E0F7FA',
     fontSize: 16,
+    textAlign: 'center',
+  },
+  loginButton: {
+    backgroundColor: '#00A8E8',
+    margin: 25,
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    shadowColor: '#003B73',
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  loginButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 17,
   },
   gallerySection: {
-    marginTop: 20,
+    marginTop: 10,
     paddingHorizontal: 20,
   },
   sectionTitle: {
     fontSize: 20,
     color: '#003B73',
     fontWeight: 'bold',
-    marginTop: 30,
     marginBottom: 10,
+    textAlign: 'center',
   },
-  sectionSubtitle: {
-    fontSize: 16,
-    color: '#0077B6',
-    fontWeight: '600',
-    marginTop: 20,
-    marginBottom: 10,
-    paddingHorizontal: 0,
-  },
-  secondCarousel: {
-    paddingHorizontal: 0,
-    marginBottom: 20, // espacio extra entre carrusel y siguiente sección
+  imageCard: {
+    width: 240,
+    height: 160,
+    borderRadius: 20,
+    backgroundColor: '#E0F7FA',
+    marginRight: 15,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 3,
   },
   image: {
-    width: 200,
-    height: 120,
-    borderRadius: 15,
-    marginRight: 10,
-    backgroundColor: '#ccc',
+    width: '100%',
+    height: '100%',
   },
   teamSection: {
     marginTop: 30,
-    paddingHorizontal: 20,
-    paddingBottom: 30,
+    paddingHorizontal: 25,
+    paddingBottom: 40,
   },
   teamText: {
     fontSize: 16,
-    color: '#00A8E8',
-    lineHeight: 28,
+    color: '#0077B6',
+    lineHeight: 26,
+    backgroundColor: '#F0F8FF',
+    padding: 15,
+    borderRadius: 10,
   },
 });

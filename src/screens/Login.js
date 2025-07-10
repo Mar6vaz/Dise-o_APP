@@ -7,23 +7,27 @@ import {
   Image,
   StyleSheet,
   Alert,
+  Dimensions,
 } from 'react-native';
-import * as Animatable from 'react-native-animatable';
 import { useNavigation } from '@react-navigation/native';
+import * as Animatable from 'react-native-animatable';
 
-// 📦 Importa imagen local desde assets
 import loginImage from '../../assets/AquaSense.png';
- // Ajusta ruta si es necesario
+
+const screenWidth = Dimensions.get('window').width;
 
 const Login = () => {
   const navigation = useNavigation();
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLogin = () => {
     if (email === 'admin@aquasense.com' && password === '1234') {
-      navigation.navigate('Home');
+      // ✅ Resetea el stack de navegación para que no pueda volver a Welcome
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'MainTabs' }],
+      });
     } else {
       Alert.alert('Error', 'Usuario o contraseña incorrectos');
     }
@@ -31,25 +35,23 @@ const Login = () => {
 
   return (
     <View style={styles.container}>
-      {/* Imagen local */}
-      <Image
-        source={loginImage}
-        style={styles.image}
-        resizeMode="cover"
-      />
+      {/* Sección superior */}
+      <View style={styles.topSection}>
+        <Animatable.View animation="zoomIn" delay={100} style={styles.imageWrapper}>
+          <Image source={loginImage} style={styles.image} resizeMode="contain" />
+        </Animatable.View>
+        <Text style={styles.appName}>AquaSense</Text>
+      </View>
 
-      <Animatable.View animation="fadeInDown" style={styles.logoContainer}>
-        <Text style={styles.title}>AquaSense</Text>
-      </Animatable.View>
-
-      <Animatable.View animation="fadeInUp" delay={300} style={styles.form}>
+      {/* Sección inferior */}
+      <Animatable.View animation="fadeInUp" delay={300} style={styles.bottomSection}>
         <Text style={styles.label}>Correo electrónico</Text>
         <TextInput
           placeholder="usuario@correo.com"
           style={styles.input}
-          keyboardType="email-address"
           value={email}
           onChangeText={setEmail}
+          keyboardType="email-address"
         />
 
         <Text style={styles.label}>Contraseña</Text>
@@ -75,60 +77,66 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#003B73',
-    justifyContent: 'flex-start',
+  },
+  topSection: {
+    flex: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#003B73',
+    paddingTop: 80,
+  },
+  imageWrapper: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: '#FFFFFF',
+    padding: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
+    shadowColor: '#000',
   },
   image: {
-    width: '70%',
-    height: 250,
-    marginTop: 80,
-    marginBottom: 10,
-    alignSelf: 'center',
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+    width: '100%',
+    height: '100%',
+    borderRadius: 75,
   },
-  logoContainer: {
-    alignItems: 'center',
-    marginVertical: 20,
-  },
-  title: {
-    fontSize: 28,
+  appName: {
+    color: '#E0F7FA',
+    fontSize: 26,
     fontWeight: 'bold',
-    color: '#FFFFFF',
+    marginTop: 20,
   },
-  form: {
+  bottomSection: {
+    flex: 2,
     backgroundColor: '#FFFFFF',
-    marginHorizontal: 20,
-    borderRadius: 20,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 5,
+    borderTopLeftRadius: 40,
+    borderTopRightRadius: 40,
+    padding: 30,
   },
   label: {
     fontSize: 16,
-    marginBottom: 5,
     color: '#003B73',
+    marginBottom: 5,
+    marginTop: 10,
   },
   input: {
-    height: 40,
-    borderColor: '#E0E0E0',
-    borderWidth: 1,
+    backgroundColor: '#F0F0F0',
+    padding: 12,
     borderRadius: 10,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-    backgroundColor: '#F5F5F5',
+    marginBottom: 10,
   },
   button: {
     backgroundColor: '#00A8E8',
-    paddingVertical: 12,
-    borderRadius: 10,
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
+    marginTop: 20,
+    elevation: 2,
   },
   buttonText: {
     color: '#FFFFFF',
-    fontWeight: 'bold',
     fontSize: 16,
+    fontWeight: 'bold',
   },
 });

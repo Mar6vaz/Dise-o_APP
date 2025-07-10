@@ -10,8 +10,11 @@ import {
   Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 const Profiles = () => {
+  const navigation = useNavigation();
+
   const [users, setUsers] = useState([
     { id: '1', name: 'Admin', email: 'admin@aquasense.com', role: 'Administrador' },
     { id: '2', name: 'Usuario', email: 'user@aquasense.com', role: 'Operador' },
@@ -19,7 +22,6 @@ const Profiles = () => {
 
   const [modalVisible, setModalVisible] = useState(false);
   const [editingUser, setEditingUser] = useState(null);
-  const [newUser, setNewUser] = useState({ name: '', email: '', role: '' });
 
   const handleEdit = (user) => {
     setEditingUser(user);
@@ -44,24 +46,21 @@ const Profiles = () => {
     ]);
   };
 
-  const handleAddUser = () => {
-    if (users.length >= 2) {
-      Alert.alert('Límite alcanzado', 'Solo se permiten dos perfiles.');
-      return;
-    }
-    if (!newUser.name || !newUser.email || !newUser.role) {
-      Alert.alert('Error', 'Todos los campos son obligatorios');
-      return;
-    }
-    const newUserData = { ...newUser, id: Date.now().toString() };
-    setUsers([...users, newUserData]);
-    setNewUser({ name: '', email: '', role: '' });
+  const handleLogout = () => {
+    Alert.alert('Cerrar Sesión', '¿Estás seguro de que deseas cerrar sesión?', [
+      { text: 'Cancelar', style: 'cancel' },
+      {
+        text: 'Salir',
+        style: 'destructive',
+        onPress: () => navigation.reset({ index: 0, routes: [{ name: 'Login' }] }),
+      },
+    ]);
   };
 
   const renderItem = ({ item }) => (
     <View style={styles.userCard}>
       <View style={styles.info}>
-        <Ionicons name="person-circle-outline" size={32} color="#003B73" />
+        <Ionicons name="person-circle-outline" size={40} color="#0077B6" />
         <View>
           <Text style={styles.name}>{item.name}</Text>
           <Text style={styles.email}>{item.email}</Text>
@@ -83,31 +82,6 @@ const Profiles = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Gestión de Perfiles</Text>
 
-      <View style={styles.addSection}>
-        <TextInput
-          style={styles.input}
-          placeholder="Nombre"
-          value={newUser.name}
-          onChangeText={(text) => setNewUser({ ...newUser, name: text })}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Correo"
-          value={newUser.email}
-          onChangeText={(text) => setNewUser({ ...newUser, email: text })}
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Rol"
-          value={newUser.role}
-          onChangeText={(text) => setNewUser({ ...newUser, role: text })}
-        />
-        <TouchableOpacity style={styles.addButton} onPress={handleAddUser}>
-          <Text style={styles.buttonText}>Agregar Usuario</Text>
-        </TouchableOpacity>
-      </View>
-
       <FlatList
         data={users}
         keyExtractor={(item) => item.id}
@@ -115,6 +89,13 @@ const Profiles = () => {
         contentContainerStyle={styles.list}
       />
 
+      {/* Botón Cerrar Sesión */}
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Ionicons name="log-out-outline" size={20} color="#FFF" />
+        <Text style={styles.logoutText}>Cerrar Sesión</Text>
+      </TouchableOpacity>
+
+      {/* Modal de edición */}
       <Modal visible={modalVisible} animationType="slide" transparent>
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
@@ -158,34 +139,16 @@ export default Profiles;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#F0FAFF',
     padding: 20,
     paddingTop: 40,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     color: '#003B73',
     marginBottom: 20,
     textAlign: 'center',
-  },
-  addSection: {
-    backgroundColor: '#E0F7FA',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  input: {
-    backgroundColor: '#F0F0F0',
-    borderRadius: 10,
-    padding: 10,
-    marginBottom: 10,
-  },
-  addButton: {
-    backgroundColor: '#00A8E8',
-    padding: 12,
-    borderRadius: 8,
-    alignItems: 'center',
   },
   list: {
     paddingBottom: 20,
@@ -193,20 +156,21 @@ const styles = StyleSheet.create({
   userCard: {
     backgroundColor: '#E0F7FA',
     padding: 15,
-    borderRadius: 12,
+    borderRadius: 15,
     marginBottom: 15,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    elevation: 2,
   },
   info: {
     flexDirection: 'row',
-    gap: 10,
     alignItems: 'center',
+    gap: 12,
   },
   actions: {
     flexDirection: 'row',
-    gap: 15,
+    gap: 18,
   },
   name: {
     fontSize: 18,
@@ -219,7 +183,7 @@ const styles = StyleSheet.create({
   },
   role: {
     fontSize: 14,
-    color: '#0096C7',
+    color: '#00B4D8',
   },
   modalOverlay: {
     flex: 1,
@@ -239,6 +203,12 @@ const styles = StyleSheet.create({
     color: '#003B73',
     marginBottom: 10,
     textAlign: 'center',
+  },
+  input: {
+    backgroundColor: '#F0F0F0',
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: 10,
   },
   modalButtons: {
     flexDirection: 'row',
@@ -262,5 +232,20 @@ const styles = StyleSheet.create({
   buttonText: {
     color: '#FFFFFF',
     fontWeight: 'bold',
+  },
+  logoutButton: {
+    flexDirection: 'row',
+    backgroundColor: '#FF5A5F',
+    paddingVertical: 14,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 10,
+  },
+  logoutText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginLeft: 8,
   },
 });

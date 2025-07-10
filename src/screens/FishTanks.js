@@ -1,7 +1,7 @@
-// src/screens/FishTanks.js
 import React from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import * as Animatable from 'react-native-animatable';
 
 const mockFishTanks = [
   { id: '1', name: 'Pecera Sala' },
@@ -12,28 +12,26 @@ const FishTanks = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Mis Peceras</Text>
+
       <FlatList
         data={mockFishTanks}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={{ paddingBottom: 20 }}
         renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() =>
-              navigation.navigate('FishTankDetail', { tankId: item.id, tankName: item.name })
-            }
-          >
-            <Text style={styles.name}>{item.name}</Text>
-          </TouchableOpacity>
+          <Animatable.View animation="fadeInUp" duration={600} style={styles.cardWrapper}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={styles.card}
+              onPress={() =>
+                navigation.navigate('FishTankDetail', { tankId: item.id, tankName: item.name })
+              }
+            >
+              <Ionicons name="water-outline" size={28} color="#00A8E8" style={{ marginRight: 15 }} />
+              <Text style={styles.name}>{item.name}</Text>
+            </TouchableOpacity>
+          </Animatable.View>
         )}
       />
-
-      {/* Botón flotante para agregar */}
-      <TouchableOpacity
-        style={styles.addButton}
-        onPress={() => navigation.navigate('AddFishTank')}
-      >
-        <Ionicons name="add" size={32} color="#FFF" />
-      </TouchableOpacity>
     </View>
   );
 };
@@ -43,40 +41,38 @@ export default FishTanks;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    backgroundColor: '#F8FAFC',
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '700',
     color: '#003B73',
-    marginTop: 30,
-    marginBottom: 20,
+    marginTop: 40,
+    marginBottom: 25,
+    alignSelf: 'center',
   },
-  card: {
-    backgroundColor: '#00A8E8',
-    padding: 20,
-    borderRadius: 15,
+  cardWrapper: {
     marginBottom: 15,
   },
-  name: {
-    fontSize: 18,
-    color: '#003B73',
-  },
-  addButton: {
-    position: 'absolute',
-    bottom: 30,
-    right: 30,
-    backgroundColor: '#00A8E8',
-    borderRadius: 30,
-    width: 60,
-    height: 60,
-    justifyContent: 'center',
+  card: {
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 18,
+    paddingHorizontal: 25,
+    borderRadius: 20,
+    // Sombra para iOS
     shadowColor: '#000',
-    shadowOffset: { width: 2, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    // Elevación para Android
     elevation: 5,
+  },
+  name: {
+    fontSize: 20,
+    color: '#003B73',
+    fontWeight: '600',
   },
 });
